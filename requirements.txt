@@ -1,5 +1,5 @@
 fastapi==0.65.2
-uvicorn==0.14.0
+uvicorn==0.13.4
 sqlalchemy==1.4.23
 python-dotenv==0.19.0
 passlib==1.7.4
