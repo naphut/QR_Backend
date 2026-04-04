@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
@@ -10,7 +11,7 @@ SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ecommerce.db")
 # Enhanced database configuration for better performance
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
-    connect_args={"check_same_thread": False} if "sqlite" in SQLALCHEMY_DATABASE_URL else {},
+    connect_args={"check_same_thread": False},
     pool_pre_ping=True,  # Check connection health
     echo=False  # Set to True for SQL debugging in development
 )
