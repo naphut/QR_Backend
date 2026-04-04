@@ -26,8 +26,14 @@ try:
     from . import models, database
     from .routers import products, orders, auth, admin
     
-    # Create database tables
-    models.Base.metadata.create_all(bind=database.engine)
+    # Check database connection
+    try:
+        # Create database tables
+        models.Base.metadata.create_all(bind=database.engine)
+        print("✅ Database tables created successfully")
+    except Exception as db_error:
+        print(f"⚠️ Database connection error: {db_error}")
+        print("🔄 Running without database functionality")
     
     # Add GZip compression for better performance
     app.add_middleware(GZipMiddleware, minimum_size=1000)
