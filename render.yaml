@@ -1,7 +1,7 @@
 services:
   # Web Service
   - type: web
-    name: qr-backend
+    name: qr-backend-2
     env: python
     plan: free
     buildCommand: "pip install -r requirements.txt"
@@ -9,3 +9,11 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.13
+      - key: SECRET_KEY
+        value: your-super-secret-key-change-this-in-production-2024
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: ALLOWED_ORIGINS
+        value: https://qr-admin-frontend-nu.vercel.app,https://qr-user-frontend-tunz.vercel.app
