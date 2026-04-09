@@ -11,6 +11,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=6)
+    is_admin: Optional[bool] = False
 
 class UserLogin(BaseModel):
     email: EmailStr
