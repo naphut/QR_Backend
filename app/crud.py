@@ -21,7 +21,7 @@ def create_user(db: Session, user: schemas.UserCreate):
         name=user.name,
         phone=user.phone,
         address=user.address,
-        is_admin=False
+        is_admin=getattr(user, 'is_admin', False)
     )
     db.add(db_user)
     db.commit()
