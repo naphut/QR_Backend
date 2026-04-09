@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # KHQR Configuration
-KHQR_PROFILE_ID = os.getenv("KHQR_PROFILE_ID", "FQWhHS2qMHQDp7MEbj9t1Vwip5acrHth")
-KHQR_SECRET_KEY = os.getenv("KHQR_SECRET_KEY", "IVOT7OzJ9wPZbBtmxrPD5dri6WIhnP5z")
+KHQR_PROFILE_ID = os.getenv("KHQR_PROFILE_ID", "cEo4uXMQVGYb0PovjrdgBDlER5775BdX")
+KHQR_SECRET_KEY = os.getenv("KHQR_SECRET_KEY", "luDfx5f5JXpyCdA4j4g9u1FssYSp2Uc0")
 KHQR_GATEWAY_URL = os.getenv("KHQR_GATEWAY_URL", "https://khqr.cc/api/payment/request")
 KHQR_VERIFY_URL = os.getenv("KHQR_VERIFY_URL", f"https://khqr.cc/api/{KHQR_PROFILE_ID}/payment-gateway/v1/payments/check-trans")
 
