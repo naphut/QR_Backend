@@ -23,7 +23,7 @@ def health_check():
 # Try to import and setup additional components
 try:
     from . import models, database
-    from .routers import products, orders, auth, admin, init, setup
+    from .routers import products, orders, auth, admin, setup
     
     # Create database tables
     models.Base.metadata.create_all(bind=database.engine)
@@ -56,11 +56,13 @@ try:
     app.include_router(products.router, prefix="/api/products", tags=["products"])
     app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
     app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
-    app.include_router(init.router, prefix="/api", tags=["init"])
     app.include_router(setup.router, prefix="/api", tags=["setup"])
     
     print("✅ All modules loaded successfully")
     
+except ImportError as e:
+    print(f"⚠️ Import error: {e}")
+    print("🔄 Running in basic mode with health checks only")
 except Exception as e:
-    print(f"⚠️ Error importing some modules: {e}")
+    print(f"⚠️ Error setting up modules: {e}")
     print("🔄 Running in basic mode with health checks only")
