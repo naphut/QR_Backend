@@ -9,22 +9,12 @@ load_dotenv()
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ecommerce.db")
 
 # Enhanced database configuration for better performance
-if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
-    # SQLite configuration
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, 
-        connect_args={"check_same_thread": False},
-        pool_pre_ping=True,
-        echo=False
-    )
-else:
-    # PostgreSQL configuration for Render
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL,
-        pool_pre_ping=True,
-        pool_recycle=300,
-        echo=False
-    )
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, 
+    connect_args={"check_same_thread": False},
+    pool_pre_ping=True,  # Check connection health
+    echo=False  # Set to True for SQL debugging in development
+)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
