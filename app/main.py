@@ -24,9 +24,13 @@ def health_check():
 try:
     from . import models, database
     from .routers import products, orders, auth, admin, init, payment
+    from .db_init import initialize_database
     
     # Create database tables
     models.Base.metadata.create_all(bind=database.engine)
+    
+    # Initialize database with required data
+    initialize_database()
     
     # Add GZip compression for better performance
     app.add_middleware(GZipMiddleware, minimum_size=1000)
