@@ -13,18 +13,11 @@ KHQR_SECRET_KEY = os.getenv("KHQR_SECRET_KEY", "luDfx5f5JXpyCdA4j4g9u1FssYSp2Uc0
 KHQR_GATEWAY_URL = os.getenv("KHQR_GATEWAY_URL", "https://khqr.cc/api/payment/request")
 KHQR_VERIFY_URL = os.getenv("KHQR_VERIFY_URL", f"https://khqr.cc/api/{KHQR_PROFILE_ID}/payment-gateway/v1/payments/check-trans")
 
-# Mock mode for testing when KHQR is unavailable
-MOCK_PAYMENT_MODE = os.getenv("MOCK_PAYMENT_MODE", "true").lower() == "true"
-
 def generate_payment_url(transaction_id: str, amount: float, success_url: str, remark: str) -> str:
     """
     Generate KHQR payment URL
     Hash generation: sha1(secret_key + transaction_id + amount + success_url + remark)
     """
-    if MOCK_PAYMENT_MODE:
-        # Return mock payment URL for testing
-        return f"https://mock-payment.example.com/pay?transaction_id={transaction_id}&amount={amount}&success_url={success_url}"
-    
     # Format amount to 2 decimal places
     formatted_amount = "{:.2f}".format(amount)
     
