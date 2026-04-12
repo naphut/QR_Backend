@@ -44,14 +44,21 @@ try:
     from . import models, database
     from .routers import products, orders, auth, admin
     
+    logger.info("✅ Successfully imported all modules")
+    
     # Create database tables
-    models.Base.metadata.create_all(bind=database.engine)
+    try:
+        models.Base.metadata.create_all(bind=database.engine)
+        logger.info("✅ Database tables created successfully")
+    except Exception as e:
+        logger.error(f"❌ Error creating database tables: {e}")
     
     # Add GZip compression for better performance
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     
     # CORS middleware - get allowed origins from environment
     allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001").split(",")
+    logger.info(f"🌐 CORS allowed origins: {allowed_origins}")
     
     app.add_middleware(
         CORSMiddleware,
@@ -76,8 +83,11 @@ try:
     app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
     app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
     
+    logger.info("✅ All routers included successfully")
     print("✅ All modules loaded successfully")
     
 except Exception as e:
+    logger.error(f"❌ Error importing modules: {e}")
+    logger.error(f"❌ Error details: {type(e).__name__}: {str(e)}")
     print(f"⚠️ Error importing some modules: {e}")
     print("🔄 Running in basic mode with health checks only")
