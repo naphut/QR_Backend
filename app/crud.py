@@ -21,7 +21,7 @@ def create_user(db: Session, user: schemas.UserCreate):
         name=user.name,
         phone=user.phone,
         address=user.address,
-        is_admin=getattr(user, 'is_admin', False)
+        is_admin=False
     )
     db.add(db_user)
     db.commit()
@@ -112,6 +112,36 @@ def get_colors(db: Session):
     result = db.query(models.Product.color).filter(models.Product.is_active == True).distinct().all()
     return [row[0] for row in result]
 
+def get_categories_with_images(db: Session):
+    """Get all unique product categories with representative images"""
+    categories = db.query(models.Product.category).filter(models.Product.is_active == True).distinct().all()
+    categories_with_images = []
+    
+    for category_row in categories:
+        category = category_row[0]
+        # Get a representative product image for this category
+        product = db.query(models.Product).filter(
+            models.Product.category == category,
+            models.Product.is_active == True
+        ).first()
+        
+        image_url = None
+        if product and product.images:
+            try:
+                import json
+                images = json.loads(product.images)
+                if images and len(images) > 0:
+                    image_url = images[0]
+            except:
+                image_url = None
+        
+        categories_with_images.append({
+            "name": category,
+            "image": image_url or "https://via.placeholder.com/400x300?text=" + category
+        })
+    
+    return categories_with_images
+
 def update_product(db: Session, product_id: int, product_update: schemas.ProductUpdate):
     db_product = get_product(db, product_id)
     if db_product:
@@ -125,9 +155,22 @@ def update_product(db: Session, product_id: int, product_update: schemas.Product
 def delete_product(db: Session, product_id: int):
     db_product = get_product(db, product_id)
     if db_product:
-        db.delete(db_product)
-        db.commit()
-    return db_product
+        try:
+            # Check if product has any orders
+            order_items = db.query(models.OrderItem).filter(models.OrderItem.product_id == product_id).all()
+            
+            if order_items:
+                # Product has orders, don't allow deletion
+                raise ValueError("Cannot delete product: Product is associated with existing orders")
+            
+            # Delete the product
+            db.delete(db_product)
+            db.commit()
+            return db_product
+        except Exception as e:
+            db.rollback()
+            raise e
+    return None
 
 def create_order(db: Session, order: schemas.OrderCreate, user_id: int = None):
     max_retries = 3

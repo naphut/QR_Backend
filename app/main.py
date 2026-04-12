@@ -23,8 +23,8 @@ async def startup_event():
     try:
         logger.info("Starting database initialization...")
         if test_db_connection():
-            init_db()
-            logger.info("✅ Database initialized successfully")
+            logger.info("✅ Database connection successful")
+            # Tables will be created during module import
         else:
             logger.error("❌ Database connection failed")
     except Exception as e:

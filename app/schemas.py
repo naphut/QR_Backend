@@ -42,10 +42,15 @@ class ProductCreate(ProductBase):
     pass
 
 class ProductUpdate(BaseModel):
+    code: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     price: Optional[float] = None
     original_price: Optional[float] = None
+    category: Optional[str] = None
+    color: Optional[str] = None
+    sizes: Optional[str] = None
+    images: Optional[str] = None
     stock: Optional[int] = None
     is_active: Optional[bool] = None
 

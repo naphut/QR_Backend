@@ -6,9 +6,13 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 from . import models, database
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # Configure bcrypt with proper settings
 pwd_context = CryptContext(
@@ -66,11 +70,8 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         if user_id is None:
             raise credentials_exception
         user_id = int(user_id)
-    except JWTError as e:
-        print(f"JWT Error: {e}")
-        raise credentials_exception
-    except ValueError as e:
-        print(f"Value Error: {e}")
+    except (JWTError, ValueError, TypeError) as e:
+        logger.error(f"Authentication error: {e}")
         raise credentials_exception
     
     user = db.query(models.User).filter(models.User.id == user_id).first()

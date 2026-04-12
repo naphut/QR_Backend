@@ -8,6 +8,7 @@ import logging
 load_dotenv()
 
 # Configure logging
+logger = logging.getLogger(__name__)
 logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
@@ -44,7 +45,7 @@ def get_db():
     try:
         yield db
     except Exception as e:
-        logging.error(f"Database error: {e}")
+        logger.error(f"Database error: {e}")
         db.rollback()
         raise
     finally:
@@ -54,9 +55,9 @@ def init_db():
     """Initialize database tables"""
     try:
         Base.metadata.create_all(bind=engine)
-        logging.info("Database tables created successfully")
+        logger.info("Database tables created successfully")
     except Exception as e:
-        logging.error(f"Error creating database tables: {e}")
+        logger.error(f"Error creating database tables: {e}")
         raise
 
 def test_db_connection():
@@ -65,8 +66,8 @@ def test_db_connection():
         db = SessionLocal()
         db.execute(text("SELECT 1"))
         db.close()
-        logging.info("Database connection successful")
+        logger.info("Database connection successful")
         return True
     except Exception as e:
-        logging.error(f"Database connection failed: {e}")
+        logger.error(f"Database connection failed: {e}")
         return False

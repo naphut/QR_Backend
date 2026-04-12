@@ -63,3 +63,11 @@ def get_colors(request: Request, db: Session = Depends(get_db)):
     """
     colors = crud.get_colors(db)
     return colors
+
+@router.get("/categories/with-images", response_model=List[dict])
+def get_categories_with_images(request: Request, db: Session = Depends(get_db)):
+    """
+    Get all unique product categories with representative images
+    """
+    categories_with_images = crud.get_categories_with_images(db)
+    return categories_with_images

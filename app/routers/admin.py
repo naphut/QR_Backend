@@ -88,10 +88,15 @@ def delete_product(
     current_user: schemas.User = Depends(auth.get_current_admin),
     db: Session = Depends(get_db)
 ):
-    product = crud.delete_product(db, product_id)
-    if not product:
-        raise HTTPException(status_code=404, detail="Product not found")
-    return {"message": "Product deleted successfully"}
+    try:
+        product = crud.delete_product(db, product_id)
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+        return {"message": "Product deleted successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete product: {str(e)}")
 
 @router.get("/orders", response_model=List[schemas.OrderResponse])
 def get_all_orders(
