@@ -3,6 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 import time
 import os
+from .database import init_db, test_db_connection, get_db
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize FastAPI first
 app = FastAPI(
@@ -10,6 +16,19 @@ app = FastAPI(
     version="1.0.0",
     description="High-performance e-commerce API for clothing store"
 )
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database on startup"""
+    try:
+        logger.info("Starting database initialization...")
+        if test_db_connection():
+            init_db()
+            logger.info("✅ Database initialized successfully")
+        else:
+            logger.error("❌ Database connection failed")
+    except Exception as e:
+        logger.error(f"❌ Database initialization error: {e}")
 
 # Simple health check routes
 @app.get("/")
@@ -23,7 +42,7 @@ def health_check():
 # Try to import and setup additional components
 try:
     from . import models, database
-    from .routers import products, orders, auth, admin, setup
+    from .routers import products, orders, auth, admin
     
     # Create database tables
     models.Base.metadata.create_all(bind=database.engine)
@@ -56,13 +75,9 @@ try:
     app.include_router(products.router, prefix="/api/products", tags=["products"])
     app.include_router(orders.router, prefix="/api/orders", tags=["orders"])
     app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
-    app.include_router(setup.router, prefix="/api", tags=["setup"])
     
     print("✅ All modules loaded successfully")
     
-except ImportError as e:
-    print(f"⚠️ Import error: {e}")
-    print("🔄 Running in basic mode with health checks only")
 except Exception as e:
-    print(f"⚠️ Error setting up modules: {e}")
+    print(f"⚠️ Error importing some modules: {e}")
     print("🔄 Running in basic mode with health checks only")
