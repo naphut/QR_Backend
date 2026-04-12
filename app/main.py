@@ -39,6 +39,24 @@ def read_root():
 def health_check():
     return {"status": "healthy", "timestamp": time.time()}
 
+@app.get("/debug")
+def debug_info():
+    """Debug endpoint to check module loading status"""
+    try:
+        from . import models, database
+        from .routers import products, orders, auth, admin
+        return {
+            "status": "modules_loaded",
+            "modules": ["models", "database", "auth", "products", "orders", "admin"],
+            "database_url": str(database.engine.url)
+        }
+    except Exception as e:
+        return {
+            "status": "modules_not_loaded",
+            "error": str(e),
+            "error_type": type(e).__name__
+        }
+
 # Try to import and setup additional components
 try:
     logger.info("🔄 Starting module imports...")
