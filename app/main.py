@@ -41,8 +41,50 @@ def health_check():
 
 # Try to import and setup additional components
 try:
-    from . import models, database
-    from .routers import products, orders, auth, admin
+    logger.info("🔄 Starting module imports...")
+    
+    # Test individual imports
+    try:
+        from . import models
+        logger.info("✅ Models imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Models import failed: {e}")
+        raise
+    
+    try:
+        from . import database
+        logger.info("✅ Database imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Database import failed: {e}")
+        raise
+    
+    try:
+        from .routers import auth
+        logger.info("✅ Auth router imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Auth router import failed: {e}")
+        raise
+    
+    try:
+        from .routers import products
+        logger.info("✅ Products router imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Products router import failed: {e}")
+        raise
+    
+    try:
+        from .routers import orders
+        logger.info("✅ Orders router imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Orders router import failed: {e}")
+        raise
+    
+    try:
+        from .routers import admin
+        logger.info("✅ Admin router imported successfully")
+    except Exception as e:
+        logger.error(f"❌ Admin router import failed: {e}")
+        raise
     
     logger.info("✅ Successfully imported all modules")
     
