@@ -22,7 +22,7 @@ class User(UserBase):
     created_at: datetime
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Product schemas
 class ProductBase(BaseModel):
@@ -59,7 +59,7 @@ class Product(ProductBase):
     created_at: datetime
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 # Order schemas
 class OrderItemCreate(BaseModel):
@@ -85,7 +85,7 @@ class OrderItemResponse(BaseModel):
     color: str
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class OrderResponse(BaseModel):
     id: int
@@ -101,7 +101,7 @@ class OrderResponse(BaseModel):
     items: List[OrderItemResponse]
     
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class OrderUpdate(BaseModel):
     status: Optional[str] = None
